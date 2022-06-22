@@ -3,7 +3,7 @@ import React, { useState } from "react";
 function GameLayout(props) {
   var [arrayLayout, setArrayLayout] = useState([[]]);
   var [flag, setflag] = useState(false);
-
+  var [counter, setcounter] = useState(0);
   const [color, setColor] = useState("red");
   function GridHead(r, c) {
     var row1 = [];
@@ -62,7 +62,9 @@ function GameLayout(props) {
   const setGrid = () => {
     setArrayLayout(arr);
     setflag(false);
+    setcounter(0);
   };
+  console.log(counter)
   const handleColor = (e, key) => {
     let copy = [...arrayLayout];
     var emp = props.columns - 1;
@@ -74,8 +76,18 @@ function GameLayout(props) {
       emp = emp - 1;
       console.log(emp);
     }
+    if(emp ===0){
+        setcounter(counter+1)
+    }
     if (emp < 0) {
-      alert("The grid is Over");
+    if(counter<props.rows){
+      alert("Can't Go there");
+    }
+    else {
+        alert("Game Over");
+        setGrid();
+    }
+
     }
     if (color == "red") {
       copy[emp][key] = (
@@ -122,8 +134,8 @@ function GameLayout(props) {
       setArrayLayout(copy);
       setColor("red");
     }
-
-    if (
+    
+    if(
       (copy[emp][key].props.children.props.style.backgroundColor ===
         copy[emp][key - 1].props.children.props.style.backgroundColor &&
         copy[emp][key - 1].props.children.props.style.backgroundColor ===
