@@ -4,6 +4,58 @@ const checkForEqual = (first, second, third, fourth) => {
 	return first === second && second === third && third === fourth;
 };
 
+const checkInRange = (rowValue, columnValue, rows = 5, columns = 6) => {
+	return rowValue >= 0 && rowValue < rows && columnValue >= 0 && columnValue < columns;
+};
+
+const checkSingleList = (arr, n) => {
+	for (let i = 0; i < n - 4 + 1; i++) {
+		const isEqual = checkForEqual(
+			arr[i].props.children.props.style.backgroundColor,
+			arr[i + 1].props.children.props.style.backgroundColor,
+			arr[i + 2].props.children.props.style.backgroundColor,
+			arr[i + 3].props.children.props.style.backgroundColor
+		);
+		if (isEqual && arr[i].props.children.props.style.backgroundColor !== 'white') {
+			return true;
+		}
+	}
+	return false;
+};
+
+const checkForDiagonal = (board, rows = 5, columns = 6) => {
+	let match = false;
+	for (let m = 0; m < rows; m++) {
+		for (let k = 0; k < columns; k++) {
+			let i = m,
+				j = k;
+			const singleListLeftBottom = [];
+			while (checkInRange(i, j, rows, columns)) {
+				singleListLeftBottom.push(board[i][j]);
+				i += 1;
+				j -= 1;
+			}
+			if (singleListLeftBottom.length >= 4) {
+				match = checkSingleList(singleListLeftBottom, singleListLeftBottom.length);
+				if (match) return match;
+			}
+			i = m;
+			j = k;
+			const singleListRightBottom = [];
+			while (checkInRange(i, j, rows, columns)) {
+				singleListRightBottom.push(board[i][j]);
+				i += 1;
+				j += 1;
+			}
+			if (singleListRightBottom.length >= 4) {
+				match = checkSingleList(singleListRightBottom, singleListRightBottom.length);
+				if (match) return match;
+			}
+		}
+	}
+	return match;
+};
+
 const checkColumns = (board, rows = 5, columns = 6) => {
 	for (let j = 0; j < columns; j++) {
 		for (let i = 0; i < rows - 4 + 1; i++) {
@@ -175,63 +227,12 @@ function GameLayout(props) {
 			setArrayLayout(copy);
 			setColor('red');
 		}
-		console.log(copy);
-		console.log(checkColumns(copy, copy.length, copy[0].length));
 		if (checkRows(copy, copy.length, copy[0].length)) {
 			setflag(true);
 		} else if (checkColumns(copy, copy.length, copy[0].length)) {
 			console.log(flag);
 			setflag(true);
-		} else if (
-			(copy[emp][key].props.children.props.style.backgroundColor ===
-				copy[emp + 1][key].props.children.props.style.backgroundColor &&
-				copy[emp + 1][key].props.children.props.style.backgroundColor ===
-					copy[emp + 2][key].props.children.props.style.backgroundColor &&
-				copy[emp + 2][key].props.children.props.style.backgroundColor ===
-					copy[emp + 3][key].props.children.props.style.backgroundColor) ||
-			(copy[emp][key].props.children.props.style.backgroundColor ===
-				copy[emp - 1][key].props.children.props.style.backgroundColor &&
-				copy[emp - 1][key].props.children.props.style.backgroundColor ===
-					copy[emp - 2][key].props.children.props.style.backgroundColor &&
-				copy[emp - 2][key].props.children.props.style.backgroundColor ===
-					copy[emp - 3][key].props.children.props.style.backgroundColor &&
-				copy[emp - 2][key].props.children.props.style.backgroundColor !== 'white' &&
-				copy[emp - 3][key].props.children.props.style.backgroundColor === 'white')
-		) {
-			setflag(true);
-		} else if (
-			(copy[emp][key].props.children.props.style.backgroundColor ===
-				copy[emp + 1][key + 1].props.children.props.style.backgroundColor &&
-				copy[emp + 1][key + 1].props.children.props.style.backgroundColor ===
-					copy[emp + 2][key + 2].props.children.props.style.backgroundColor &&
-				copy[emp + 2][key + 2].props.children.props.style.backgroundColor ===
-					copy[emp + 3][key + 3].props.children.props.style.backgroundColor) ||
-			(copy[emp][key].props.children.props.style.backgroundColor ===
-				copy[emp - 1][key - 1].props.children.props.style.backgroundColor &&
-				copy[emp - 1][key - 1].props.children.props.style.backgroundColor ===
-					copy[emp - 2][key - 2].props.children.props.style.backgroundColor &&
-				copy[emp - 2][key - 2].props.children.props.style.backgroundColor ===
-					copy[emp - 3][key - 3].props.children.props.style.backgroundColor &&
-				copy[emp - 2][key - 2].props.children.props.style.backgroundColor !== 'white' &&
-				copy[emp - 3][key - 3].props.children.props.style.backgroundColor === 'white')
-		) {
-			setflag(true);
-		} else if (
-			(copy[emp][key].props.children.props.style.backgroundColor ===
-				copy[emp + 1][key - 1].props.children.props.style.backgroundColor &&
-				copy[emp + 1][key - 1].props.children.props.style.backgroundColor ===
-					copy[emp + 2][key - 2].props.children.props.style.backgroundColor &&
-				copy[emp + 2][key - 2].props.children.props.style.backgroundColor ===
-					copy[emp + 3][key - 3].props.children.props.style.backgroundColor) ||
-			(copy[emp][key].props.children.props.style.backgroundColor ===
-				copy[emp - 1][key + 1].props.children.props.style.backgroundColor &&
-				copy[emp - 1][key + 1].props.children.props.style.backgroundColor ===
-					copy[emp - 2][key + 2].props.children.props.style.backgroundColor &&
-				copy[emp - 2][key + 2].props.children.props.style.backgroundColor ===
-					copy[emp - 3][key + 3].props.children.props.style.backgroundColor &&
-				copy[emp - 2][key + 2].props.children.props.style.backgroundColor !== 'white' &&
-				copy[emp - 3][key + 2].props.children.props.style.backgroundColor === 'white')
-		) {
+		} else if (checkForDiagonal(copy, copy.length, copy[0].length)) {
 			setflag(true);
 		}
 	};
@@ -239,7 +240,7 @@ function GameLayout(props) {
 	return (
 		<div>
 			<div>
-				<button onClick={(e) => setGrid()}>Click Here to Play</button>
+				<button onClick={(e) => setGrid()}>Get Grid</button>
 				{b.map((items, index) => {
 					return (
 						<div style={{ display: 'flex' }}>
