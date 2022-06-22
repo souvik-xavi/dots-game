@@ -61,6 +61,7 @@ function GameLayout(props) {
   const b = GridHead(props.rows, 1);
   const setGrid = () => {
     setArrayLayout(arr);
+    setColor("red")
     setflag(false);
     setcounter(0);
   };
@@ -166,8 +167,6 @@ function GameLayout(props) {
           copy[emp - 2][key].props.children.props.style.backgroundColor &&
         copy[emp - 2][key].props.children.props.style.backgroundColor ===
           copy[emp - 3][key].props.children.props.style.backgroundColor &&
-        copy[emp - 2][key].props.children.props.style.backgroundColor !==
-          "white" &&
         copy[emp - 3][key].props.children.props.style.backgroundColor ===
           "white")
     ) {
@@ -244,7 +243,7 @@ function GameLayout(props) {
         })}
       </div>
 
-      {flag? color==='red'? `${props.player2} wins`:`${props.player2} wins` :arrayLayout.map((items, index) => {
+      {flag? color==='red'? `${props.player2} wins`:`${props.player1} wins` :arrayLayout.map((items, index) => {
         return (
           <div style={{ display: "flex" }}>
             {items.map((subItems, sIndex) => {
