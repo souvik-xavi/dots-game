@@ -239,7 +239,7 @@ function GameLayout(props) {
 	return (
 		<div>
 			<div>
-				<button onClick={(e) => setGrid()}>Get Grid</button>
+				<button onClick={(e) => setGrid()}>Click Here to Play</button>
 				{b.map((items, index) => {
 					return (
 						<div style={{ display: 'flex' }}>
