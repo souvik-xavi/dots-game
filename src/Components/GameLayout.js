@@ -131,8 +131,10 @@ function GameLayout(props) {
 		}
 		return arr1;
 	}
-	var arr = new Array(props.columns).fill(0).map(() =>
-		new Array(props.rows).fill(
+	let r = parseInt(props.rows);
+    	let c= parseInt(props.columns)
+	var arr = new Array(c).fill(0).map(() =>
+		new Array(r).fill(
 			<div
 				style={{
 					display: 'flex',
